@@ -1,58 +1,70 @@
-# Privacy Policy for SupportUp Extension
+Privacy Policy for SupportUp Extension
+Last updated: September 16, 2026
 
-**Last updated:** August 25, 2026
+1. Data We Collect
+Authentication tokens – when you interact with chat-api.moneyman.ru, the extension reads the Authorization and ApiKey headers from outgoing requests. These tokens are temporarily stored in chrome.storage.local only to authenticate subsequent API calls (e.g., fetching visitor_id, statistics, or CRM data). They never leave your device.
 
-## 1. Data We Collect
+Extension preferences – your on/off choices for each feature (including "Statistics and export" and the optional cloud cache) are stored in chrome.storage.sync. This allows your settings to be available across devices if you are signed into Chrome.
 
-**Authentication tokens** – when you interact with `chat-api.moneyman.ru`, the extension reads the `Authorization` and `ApiKey` headers from outgoing requests. These tokens are temporarily stored in `chrome.storage.local` only to authenticate subsequent API calls (e.g., fetching `visitor_id`, statistics, or CRM data). They never leave your device.
+UI state – some temporary selections (like radio button choices in the chat interface) are saved in localStorage to persist across page reloads. This data is not synced and is purely for convenience.
 
-**Extension preferences** – your on/off choices for each feature (including "Statistics and export") are stored in `chrome.storage.sync`. This allows your settings to be available across devices if you are signed into Chrome.
+Email and visitor identifiers – when you view a chat, the extension may extract the visitor's email from the page and send it (via the background script) to the search_visitors API to retrieve visitor_id values. These IDs are displayed in the chat header and are not stored permanently. The email is only used for that single lookup.
 
-**UI state** – some temporary selections (like radio button choices in the chat interface) are saved in `localStorage` to persist across page reloads. This data is not synced and is purely for convenience.
+Statistics and export data – when you use the Statistics or Export chats/tickets features, the extension retrieves the following data from the chat-api.moneyman.ru API:
 
-**Email and visitor identifiers** – when you view a chat, the extension may extract the visitor's email from the page and send it (via the background script) to the `search_visitors` API to retrieve `visitor_id` values. These IDs are displayed in the chat header and are not stored permanently. The email is only used for that single lookup.
+List of operators (names and IDs)
 
-**Statistics and export data** – when you use the **Statistics** or **Export chats/tickets** features, the extension retrieves the following data from the `chat-api.moneyman.ru` API:
-- List of operators (names and IDs)
-- Closed chat history (conversation IDs, operator IDs, closing timestamps, channel IDs)
-- Operator messages (sender IDs, conversation IDs, timestamps)
+Closed chat history (conversation IDs, operator IDs, closing timestamps, channel IDs)
 
-This data is used solely to build the requested statistics tables or export lists. It is not stored persistently – it is kept only in memory while the modal window is open. You may copy the data to your clipboard, but the extension itself does not store or transmit these logs.
+Operator messages (sender IDs, conversation IDs, timestamps)
 
-## 2. How We Use Data
+This data is used solely to build the requested statistics tables or export lists. It is not stored persistently on your device – it is kept only in memory while the modal window is open. You may copy the data to your clipboard, but the extension itself does not store these logs on your device.
 
-- **Tokens** are used only to make authenticated requests to `chat-api.moneyman.ru` and `admin.moneyman.ru` as part of the extension's core features (showing visitor IDs, opening CRM links, fetching statistics).
-- **Preferences** are used to enable/disable specific modules according to your choice.
-- **Statistics data** is used only to display the requested summary tables and lists. No data is used for analytics, profiling, marketing, or any purpose other than providing the described functionality.
+Cloud cache (optional feature) – if the user enables the "Общий кэш статистики" setting (statsCloudCache, enabled by default) or clicks "☁️ Сохранить в кэш" inside the statistics modal, the aggregated statistics table (agent names, chat links, channel names, dates, message counts – no message text, no personal content) is sent via HTTPS to a Supabase-hosted cache server (https://cgckeielvtfwncwvhaex.supabase.co). This cache is shared between operators so they do not have to regenerate the same statistics table repeatedly. Cache records expire automatically after 24 hours (DEFAULT_TTL_MIN = 1440) and are excluded from all reads after expiration. The extension never sends message bodies, email addresses, tokens, or any other raw user content to this cache.
 
-## 3. Data Storage and Retention
+2. How We Use Data
+Tokens are used only to make authenticated requests to chat-api.moneyman.ru and admin.moneyman.ru as part of the extension's core features (showing visitor IDs, opening CRM links, fetching statistics).
 
-- **`chrome.storage.local` (tokens)** – stored locally, cleared when you uninstall the extension.
-- **`chrome.storage.sync` (preferences)** – stored in your Google account (if sync is enabled) and can be managed via Chrome's settings.
-- **`localStorage` (UI state)** – stored locally; you can clear it via browser developer tools or by uninstalling the extension.
-- **Statistics data** – not stored; it exists only in memory during the current session and is discarded when you close the modal window.
+Preferences are used to enable/disable specific modules according to your choice.
 
-## 4. Compliance with Google API Limited Use Policy
+Statistics data is used only to display the requested summary tables and lists.
 
-The use of information received from Google APIs will adhere to the **Chrome Web Store User Data Policy**, including the **Limited Use** requirements. This extension does not transfer, sell, or share any user data with third parties. All data is processed locally on your device or within the `moneyman.ru` domain solely to provide the extension's core functionality: improving the support interface, automating authentication for API calls, and providing on-demand statistics and data exports.
+Cloud cache data is used only to let other operators see a previously generated statistics table, avoiding duplicate API calls.
 
-We do not collect, use, or transfer any user data for advertising, marketing, or any other commercial purposes.
+No data is used for analytics, profiling, marketing, or any purpose other than providing the described functionality.
 
-## 5. Data Sharing
+3. Data Storage and Retention
+chrome.storage.local (tokens) – stored locally, cleared when you uninstall the extension.
 
-We do not sell, rent, or share any user data with third parties. All data is processed locally or within the `moneyman.ru` domain in accordance with your authentication.
+chrome.storage.sync (preferences) – stored in your Google account (if sync is enabled) and can be managed via Chrome's settings.
 
-## 6. User Rights
+localStorage (UI state) – stored locally; you can clear it via browser developer tools or by uninstalling the extension.
 
+Statistics data – not stored on your device. It exists only in memory while the statistics or export modal is open. If the optional cloud cache feature is enabled, aggregated statistics tables are transmitted to a Supabase-hosted cache server and automatically expire after 24 hours. No message text, email addresses, or authentication tokens are included in the cache.
+
+4. Compliance with Google API Limited Use Policy
+The use of information received from Google APIs will adhere to the Chrome Web Store User Data Policy, including the Limited Use requirements. This extension does not transfer, sell, or share any user data with third parties for advertising, marketing, or any commercial purpose.
+
+The statistics cloud cache described above is used exclusively to provide the statistics-sharing feature requested by the user. It is not used for advertising, profiling, or any purpose unrelated to the extension's single purpose. The cache is accessed only by the extension itself via an anonymous publishable key, and records automatically expire after 24 hours.
+
+All data is processed locally on your device, within the moneyman.ru domain, or on the dedicated Supabase-hosted cache server solely to provide the extension's core functionality: improving the support interface, automating authentication for API calls, and providing on-demand statistics and data exports.
+
+5. Data Sharing
+We do not sell or rent any user data, and we do not share it with any third parties for advertising, marketing, or any commercial purpose. The only external data flow is the optional statistics cloud cache: aggregated statistics tables are transmitted via HTTPS to a Supabase-hosted server used solely as infrastructure for this feature. No other data leaves your device or the moneyman.ru domain.
+
+6. User Rights
 You may delete all extension data at any time:
 
-- **Uninstall the extension** – all data (tokens, preferences, UI state) will be automatically removed.
-- Alternatively, you can manually clear `chrome.storage.local`, `chrome.storage.sync`, and `localStorage` via Chrome's developer tools (F12 → Application tab).
+Uninstall the extension – all data (tokens, preferences, UI state) will be automatically removed.
 
-## 7. Updates to This Policy
+Alternatively, you can manually clear chrome.storage.local, chrome.storage.sync, and localStorage via Chrome's developer tools (F12 → Application tab).
 
+To stop the extension from sending statistics to the cloud cache, simply disable the "Общий кэш статистики" checkbox in the extension popup.
+
+7. Updates to This Policy
 If the extension's functionality changes, we will update this policy and notify users via the Chrome Web Store update description.
 
-## 8. Contact
+8. Contact
+For any privacy-related questions, please contact us at:
 
-For any privacy-related questions, please contact us at: **test.konstantin.mishchenko@gmail.com**
+test.konstantin.mishchenko@gmail.com
